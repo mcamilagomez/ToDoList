@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { FAB, Portal, Modal, TextInput, Button } from "react-native-paper";
+import {
+  FAB,
+  Portal,
+  Modal,
+  TextInput,
+  Button,
+  Appbar
+} from "react-native-paper";
 import Swipeable from "react-native-gesture-handler/ReanimatedSwipeable";
 
 export default function TodoList() {
@@ -79,13 +86,16 @@ export default function TodoList() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
+      <Appbar.Header>
+        <Appbar.Content title="Todo List" />
+      </Appbar.Header>
       <View style={{ flex: 1 }}>
         <FlatList
           data={data}
           renderItem={renderItem}
           keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={{ padding: 16 }}
+          contentContainerStyle={{ padding: 4 }}
         />
         <FAB style={styles.fab} icon="plus" color="white" onPress={addItem} />
       </View>
@@ -102,6 +112,7 @@ export default function TodoList() {
             placeholder="Enter TODO item"
             value={inputValue}
             onChangeText={setInputValue}
+            onSubmitEditing={saveItem}
           />
           <View
             style={{ flexDirection: "row", justifyContent: "space-evenly" }}
@@ -124,7 +135,7 @@ export default function TodoList() {
           </View>
         </Modal>
       </Portal>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -150,7 +161,7 @@ const styles = StyleSheet.create({
   },
   bottomSheetStyle: {
     backgroundColor: "white",
-    padding: 20,
+    padding: 10,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     position: "absolute",
@@ -159,8 +170,6 @@ const styles = StyleSheet.create({
     bottom: 0
   },
   input: {
-    width: "80%",
-    padding: 10,
     backgroundColor: "white",
     borderRadius: 5,
     marginBottom: 10
