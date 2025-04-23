@@ -8,3 +8,4 @@ react-native-paper
 react-native-vector-icons   
 react-native-web   
 react-native-safe-area-context   
+react-native-gesture-handler

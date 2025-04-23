@@ -11,6 +11,13 @@ export default function TodoList() {
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <Text>{item.name}</Text>
+      <Button
+        mode="contained-tonal"
+        onPress={() => editItem(item)}
+        style={styles.optionButton}
+      >
+        Edit
+      </Button>
     </View>
   );
   const addItem = () => {
@@ -20,13 +27,28 @@ export default function TodoList() {
   };
 
   const saveItem = () => {
-    const newItem = {
-      id: data.length + 1,
-      name: inputValue
-    };
-    setData((prevData) => [...prevData, newItem]);
-
+    if (currentItem) {
+      // Edit existing item
+      setData((prevData) =>
+        prevData.map((item) =>
+          item.id === currentItem.id ? { ...item, name: inputValue } : item
+        )
+      );
+    } else {
+      // Add new item
+      const newItem = {
+        id: data.length + 1,
+        name: inputValue
+      };
+      setData((prevData) => [...prevData, newItem]);
+    }
     setVisible(false);
+  };
+
+  const editItem = (item) => {
+    setCurrentItem(item);
+    setInputValue(item.name);
+    setVisible(true);
   };
 
   return (
@@ -81,6 +103,9 @@ export default function TodoList() {
 
 const styles = StyleSheet.create({
   item: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginVertical: 8,
     marginHorizontal: 16,
     padding: 12,
