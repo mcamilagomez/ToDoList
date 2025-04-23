@@ -2,24 +2,46 @@ import React, { useState } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FAB, Portal, Modal, TextInput, Button } from "react-native-paper";
+import Swipeable from "react-native-gesture-handler/ReanimatedSwipeable";
 
 export default function TodoList() {
   const [visible, setVisible] = React.useState(false);
   const [data, setData] = useState([{ id: 1, name: "Item 1" }]);
   const [currentItem, setCurrentItem] = useState(null);
   const [inputValue, setInputValue] = useState("");
-  const renderItem = ({ item }) => (
-    <View style={styles.item}>
-      <Text>{item.name}</Text>
-      <Button
-        mode="contained-tonal"
-        onPress={() => editItem(item)}
-        style={styles.optionButton}
+
+  const renderItem = ({ item }) => {
+    const renderRightActions = () => (
+      <View style={styles.rightAction}>
+        <Text style={styles.deleteText}>Eliminar</Text>
+      </View>
+    );
+
+    return (
+      <Swipeable
+        friction={2}
+        overshootRight={false}
+        renderRightActions={renderRightActions}
+        rightThreshold={80}
+        onSwipeableOpen={(direction) => {
+          if (direction === "right") {
+            deleteItem(item.id);
+          }
+        }}
       >
-        Edit
-      </Button>
-    </View>
-  );
+        <View style={styles.item}>
+          <Text>{item.name}</Text>
+          <Button
+            mode="contained-tonal"
+            onPress={() => editItem(item)}
+            style={styles.optionButton}
+          >
+            Edit
+          </Button>
+        </View>
+      </Swipeable>
+    );
+  };
   const addItem = () => {
     setCurrentItem(null);
     setInputValue("");
@@ -49,6 +71,11 @@ export default function TodoList() {
     setCurrentItem(item);
     setInputValue(item.name);
     setVisible(true);
+  };
+
+  const deleteItem = (id) => {
+    console.log("Delete item with id:", id);
+    setData((prevData) => prevData.filter((item) => item.id !== id));
   };
 
   return (
@@ -137,5 +164,18 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 5,
     marginBottom: 10
+  },
+  rightAction: {
+    width: 80, // must match rightThreshold
+    backgroundColor: "red",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 5,
+    marginVertical: 8,
+    marginHorizontal: 16
+  },
+  deleteText: {
+    color: "white",
+    fontWeight: "bold"
   }
 });
