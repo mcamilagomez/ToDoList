@@ -1,24 +1,21 @@
-import TodoList from "./pages/TodoList";
+import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { PaperProvider } from "react-native-paper";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import {
-  configureReanimatedLogger,
-  ReanimatedLogLevel
-} from "react-native-reanimated";
-
-// This is the default configuration
-configureReanimatedLogger({
-  level: ReanimatedLogLevel.warn,
-  strict: false // Reanimated runs in strict mode by default
-});
+import { NavigationContainer } from "@react-navigation/native";
+import { TodoProvider } from "./context/Provider"; 
+import TodoList from "./pages/TodoList"; 
 
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <PaperProvider>
-          <TodoList />
+          <TodoProvider>
+            <NavigationContainer>
+              <TodoList />
+            </NavigationContainer>
+          </TodoProvider>
         </PaperProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
